@@ -133,7 +133,7 @@ int choose(int menuChoices){
 }
 
 int wait(void){
-    printf("\n\nPress any key to go back to main menu...");
+    printf("\n\nPress any key to go back to continue...");
 
     char gh[6];
     getFunc(gh, 6);
