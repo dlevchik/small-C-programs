@@ -1,3 +1,5 @@
+//this is unfinisfed program. Please check phoneBookV0.2.c
+
 #include <stdio.h>  
 #include <stdlib.h>
 #include <string.h>

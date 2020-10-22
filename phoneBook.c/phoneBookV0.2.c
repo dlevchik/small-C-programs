@@ -1,3 +1,5 @@
+//TODO: fix filename
+
 #include <stdio.h>  
 #include <stdlib.h>
 #include <string.h>
@@ -326,7 +328,7 @@ int choose(int menuChoices){
 }
 
 void wait(void){
-    printf("\n\nPress any key to go back to continue...");
+    printf("\n\nPress any key to continue...");
 
     char gh[6];
     getFunc(gh, 6);
