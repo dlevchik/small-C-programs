@@ -1,5 +1,3 @@
-//TODO: process negative numbers
-
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
@@ -7,14 +5,15 @@
 #include <ctype.h>
 #include <math.h>
 
-#define HI "Program helps you to convert digits to binary or binary to digit.\n\nPlease choose working mode: \n1) Digit to binary; \n2) Binary to digit\n(\'/q\' to quit)"
+#define HI "Program helps you to convert digits to binary code or vise versa.\n\nPlease choose working mode: \n1) Digit to binary; \n2) Binary to digit\n(\'/q\' to quit)"
 #define CH_SIZE 3
 #define INPUT_SIZE 15
 
 char * getFunc(char * str, int n);
 int check(char const * const str, const int n, bool isBinary);
 char * toBinary(const char const * str, char * output);
-long int toNum(const char const * str);
+long int toNum(char * str);
+char * binaryToNegative(char * str);
 
 void wait(void){
     printf("\n\nPress any key to continue...");
@@ -62,6 +61,7 @@ int main(void){
                     char * code;
 
                     printf("\nBinary code of %s: 0x%s;", input, toBinary(input, code));
+
                     free(code);
                 }
             break;
@@ -82,7 +82,7 @@ int main(void){
                         break;
                     }
 
-                    printf("Code 0x%s is %ld;", input, toNum(input));
+                    printf("\nCode 0x%s is %ld;", input, toNum(input));
                 }
             break;
             
@@ -143,7 +143,7 @@ int check(char const * const str, const int n, const bool isBinary){
             return 0;
         }
 
-        if (!isdigit(str[i]))
+        if (!isdigit(str[i]) && str[0] != '-')
         {
             printf("\nNumber must contain only digits. Please try again:");
             return 0;
@@ -153,9 +153,16 @@ int check(char const * const str, const int n, const bool isBinary){
     return 1;
 }
 
+//TODO: process negative numbers
 char * toBinary(const char const * str, char * output){
     long int num = atoi(str);
-    int i = 1;
+    int i = 2;
+    bool isNegative = false;
+    
+    if(num < 0){
+        isNegative = true;
+        num *= -1;
+    }
 
     char * result = (char*) malloc(sizeof(char) * 1);
     if (!result){
@@ -190,21 +197,33 @@ char * toBinary(const char const * str, char * output){
         exit(EXIT_FAILURE);
     }
 
-    for (int j = 0, x = i - 2; j < i - 1; j++, x--)
+    for (int j = 1, x = i - 2; j < i - 1; j++, x--)
     {   
         output[j] = result[x];
     }
    
     output[i-1] = '\0';
+
+    output[0] = '0';
+    if(isNegative){
+        //output[0] = '1';
+        output = binaryToNegative(output);
+    }
    
     free(result);
     return output;
 }
 
-long int toNum(const char const * str){
+long int toNum(char * str){
     long int result = 0;
+    int isNegative = false;
 
-    for (int i = strlen(str) - 1; i >= 0; i--)
+    if(str[0] == '1'){
+        str = binaryToNegative(str);
+        isNegative = true;
+    }
+
+    for (int i = strlen(str) - 1; i > 0; i--)
     {
         if (str[i] == '1')
         {
@@ -212,5 +231,37 @@ long int toNum(const char const * str){
         }
     }
     
+    if(isNegative)
+    {
+        result *= -1;
+    }
+
     return result;
+}
+
+char * binaryToNegative(char * str){
+    for (int i = 0; i < strlen(str); i++)
+    {
+        if (str[i] == '0')
+        {
+            str[i] = '1';
+        } else
+        {
+            str[i] = '0';
+        }
+    }
+    
+    for (int i = strlen(str) - 1; i > 0; i--)
+    {
+        if (str[i] == '0')
+        {
+            str[i] = '1';
+            break;
+        } else
+        {
+            str[i] = '0';
+        }
+    }
+    
+    return str;
 }
